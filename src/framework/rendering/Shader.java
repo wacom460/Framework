@@ -47,7 +47,7 @@ public class Shader {
 		int vertexShader = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
 		GL20.glShaderSource(vertexShader, vertexSrc);
 		GL20.glCompileShader(vertexShader);
-		if (GL20.glGetShader(vertexShader, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
+		if (GL20.glGetShaderi(vertexShader, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			throw new RuntimeException("Error compiling vertex shader: "
 					+ GL20.glGetShaderInfoLog(vertexShader, 256));
 		}
@@ -55,7 +55,7 @@ public class Shader {
 		int fragmentShader = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
 		GL20.glShaderSource(fragmentShader, fragSrc);
 		GL20.glCompileShader(fragmentShader);
-		if (GL20.glGetShader(fragmentShader, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
+		if (GL20.glGetShaderi(fragmentShader, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			throw new RuntimeException("Error compiling fragment shader: "
 					+ GL20.glGetShaderInfoLog(fragmentShader, 256));
 		}
@@ -64,13 +64,13 @@ public class Shader {
 		GL20.glAttachShader(programId, vertexShader);
 		GL20.glAttachShader(programId, fragmentShader);
 		GL20.glLinkProgram(programId);
-		if (GL20.glGetProgram(programId, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
+		if (GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
 			throw new RuntimeException("Error linking shader program: "
 					+ GL20.glGetProgramInfoLog(programId, 256));
 		}
 
 		GL20.glValidateProgram(programId);
-		if (GL20.glGetProgram(programId, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
+		if (GL20.glGetProgrami(programId, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
 			throw new RuntimeException("Error validating shader program: "
 					+ GL20.glGetProgramInfoLog(programId, 256));
 		}
