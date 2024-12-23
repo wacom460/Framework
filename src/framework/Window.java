@@ -1,0 +1,205 @@
+package framework;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import framework.audio.Audio;
+import framework.gui.Widget;
+import framework.rendering.DrawList;
+import framework.rendering.Shader;
+import framework.rendering.Tex;
+import framework.rendering.Text;
+import framework.rendering.TileSheet;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.ContextAttribs;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.PixelFormat;
+
+public abstract class Window {
+	public static int width = 640, height = 480;
+	private static boolean running = true;
+
+	public static Tex atlas;
+	public static TileSheet atlasTileSheet;
+	public static DrawList dl = new DrawList();
+	public static Audio audio;
+
+	public static int keyboardFrames[] = new int[Keyboard.getKeyCount()];
+	public static boolean keyboardFF[] = new boolean[Keyboard.getKeyCount()];// first
+																		// frame
+	public static boolean keyboardDown[] = new boolean[Keyboard.getKeyCount()];
+	public static boolean keyboardReleased[] = new boolean[Keyboard.getKeyCount()];
+
+	public static Shader shader;
+
+	public static Widget widget;// global selected widget
+	public static List<Widget> widgets;
+	private static boolean windowFocusState;
+	private static boolean lastWindowFocusState;
+	
+	private static long framesRendered = 0;
+	private static long frameTimeTakenNs = 0;
+	private static int fps_frames = 0;
+    private static long lastTime = System.nanoTime();
+    private static long deltaTime = 0, cumTime = 0;
+    public static int fps;
+
+    public void tickFps() {
+        fps_frames++;
+        long now = System.nanoTime();
+        deltaTime = now - lastTime;
+        cumTime += deltaTime;
+        lastTime = now;
+        if (cumTime >= 1000000000L) {
+            fps = fps_frames;
+            fps_frames = 0;
+            cumTime = 0;
+        }
+    }
+	
+	public static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+	public static void setWidget(Widget w) {
+		widget = w;
+	}
+	
+	public Window(String title, int width, int height, String atlasLoc, int atlasW, int atlasH, int winLocX, int winLocY) {
+    	try {
+			File resFolder = new File("./res/");
+	        if (!(resFolder.exists() && resFolder.isDirectory())) {
+				throw new RuntimeException("res folder doesn't exist! can't continue!");
+	        }
+	        File atlasFile = new File("./res/" + atlasLoc);
+	        if (!atlasFile.exists()) {
+				throw new RuntimeException("atlas doesn't exist! can't continue!");
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		Window.width = width;
+		Window.height = height;
+
+		widgets = new ArrayList<>();
+		
+		try {
+			//Display.setInitialBackground(0.2f, 0, 0);
+			if(winLocX + winLocY != 0) Display.setLocation(winLocX, winLocY);
+			Display.setTitle(title);
+			//Display.setIcon(null);
+			Display.setDisplayMode(new DisplayMode(width, height));
+			Display.create(new PixelFormat(), new ContextAttribs(2, 1).withForwardCompatible(false));
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+
+		GL11.glViewport(0, 0, width, height);
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, width, height, 0, -1, 1);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		
+		//System.out.println("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION));
+
+		atlas = new Tex(atlasLoc);
+		atlasTileSheet = new TileSheet(atlas, atlasW, atlasH);
+		shader = new Shader();
+		
+		audio = new Audio();
+
+		//all framework features must be initialized before calling init!
+		init();
+
+		while (running) {
+			tick();
+		}
+		
+		cleanup();
+		
+		audio.cleanup();
+		Display.destroy();
+	}
+	
+	private void tick() {
+		long n = System.nanoTime();
+		tickFps();
+		dl.clear();
+		
+		windowFocusState = Display.isActive();
+		if(windowFocusState != lastWindowFocusState && windowFocusState) {
+			atlas.reload();
+			//System.out.println("Reloaded texture atlas");
+		}
+		lastWindowFocusState = windowFocusState;
+
+		GL11.glClearColor(0, 0, 0, 1);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+
+		for (int i = 0; i < keyboardFrames.length; ++i) {
+			if (Keyboard.isKeyDown(i)) {
+				keyboardFrames[i]++;
+				keyboardDown[i] = true;
+			} else if (keyboardFrames[i] > 0) {
+				keyboardFrames[i] = 0;
+				keyboardDown[i] = false;
+				keyboardReleased[i] = true;
+			}
+			if (keyboardFrames[i] == 1) {
+				keyboardFF[i] = true;
+				onKeyPress(i);
+			}
+		}
+
+		atlas.bind();
+		//shader.bind();
+
+		for (Widget w : widgets) {
+			w.update();
+		}
+		
+		
+		frame();
+
+		Text.draw(dl, 0, 0, 1, 0, 0, new Color(1, 0, 0, 1), new Color(1, 0, 1, 1), "Fps: " + fps);
+		
+		dl.sendToGPU();
+		dl.render();
+		Display.update();
+
+		for (int i = 0; i < keyboardReleased.length; ++i) {
+			keyboardReleased[i] = false;
+			keyboardFF[i] = false;
+		}	
+
+		// Display.sync(20);
+		if (Display.isCloseRequested()) running = false;
+		frameTimeTakenNs = System.nanoTime() - n;
+		framesRendered++;
+
+		try {
+			if(framesRendered > 1 && frameTimeTakenNs > 0 && frameTimeTakenNs < 1000000) {
+				Thread.sleep(0, 1000000 - (int)frameTimeTakenNs);
+			} else {
+				//Thread.sleep(1, 0);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected abstract void init();
+	protected abstract void cleanup();
+	protected abstract void frame();
+	
+	public void onKeyPress(int i) {
+		
+	}
+}
