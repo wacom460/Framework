@@ -1,6 +1,8 @@
 package framework;
 
 public class Color {
+	public static final Color white = new Color(1, 1, 1, 1);
+	public static final Color black = new Color(0, 0, 0, 1);
 	public float r = 1, g = 1, b = 1, a = 1;
 	public Color() {
 		

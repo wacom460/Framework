@@ -1,17 +1,9 @@
 package framework;
 
 public class Clock {
-	private long time;
-	private boolean reversing;
-	private boolean pingPong;
-	
-	public Clock(boolean pingPong) {
-		this.pingPong = pingPong;
-		reset();
-	}
-	
+	private long time = System.nanoTime();
+
 	public void reset() {
-		if(pingPong) reversing = !reversing;
 		time = System.nanoTime();
 	}
 	

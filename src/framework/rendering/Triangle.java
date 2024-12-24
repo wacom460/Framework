@@ -4,6 +4,7 @@ import java.util.List;
 
 import framework.RectF;
 import framework.Vec2F;
+import framework.Window;
 
 public class Triangle {
 	Vertex[] verts = new Vertex[3];
@@ -15,6 +16,7 @@ public class Triangle {
 	}
 	
 	public void transform(float originX, float originY, float transX, float transY, float scaleX, float scaleY, float rotRad, float opacityMultiplier) {
+		originX = Window.width - originX; 
 	    for (int i = 0; i < 3; ++i) {
 	        float translatedX = verts[i].pos.x - originX + transX;
 	        float translatedY = verts[i].pos.y - originY + transY;

@@ -97,9 +97,14 @@ public class DrawList {
 		for(Triangle t : workingTriangles)
 			trianglesFinal.add(t.clone());
 	}
-		
+	
 	//call after supplying triangles
-	public void transform(float originX, float originY, float transX, float transY, float scaleX, float scaleY, float rotRad, float opacityMultiplier) {
+	public void transform(float originX, float originY, 
+			float transX, float transY, 
+			float scaleX, float scaleY, 
+			float rotRad, 
+			float opacityMultiplier) 
+	{
 		for(Triangle t : workingTriangles) {
 			t.transform(originX, originY, transX, transY, scaleX, scaleY, rotRad, opacityMultiplier);
 		}
@@ -108,7 +113,9 @@ public class DrawList {
 	public void transformCenter(float originOffsetNormalizedX, float originOffsetNormalizedY, 
 			float transX, float transY, 
 			float scaleX, float scaleY, 
-			float rotRad, float opacityMultiplier) {
+			float rotRad, 
+			float opacityMultiplier) 
+	{
 		if(workingTriangles.size() < 1) return;
 		/*
 		if(originOffsetNormalizedX < -1.0f) originOffsetNormalizedX = -1.0f;
@@ -132,17 +139,28 @@ public class DrawList {
 		int capacity = ret.capacity();
 		for (int i = 0; i < capacity; i += triFloatCount) {
 			Triangle t = trianglesFinal.get(i / triFloatCount);
-			float colAdd = 0f;
-			float[] data = { t.verts[0].pos.x, t.verts[0].pos.y, t.verts[0].texPos.x,
-					t.verts[0].texPos.y, t.verts[0].color.r + colAdd, t.verts[0].color.g + colAdd, t.verts[0].color.b + colAdd,
-					t.verts[0].color.a + colAdd,
+			float[] data = { 
+				t.verts[0].pos.x, t.verts[0].pos.y, 
+				t.verts[0].texPos.x, t.verts[0].texPos.y, 
+				t.verts[0].color.r, 
+				t.verts[0].color.g, 
+				t.verts[0].color.b,
+				t.verts[0].color.a,
 
-					t.verts[1].pos.x, t.verts[1].pos.y, t.verts[1].texPos.x, t.verts[1].texPos.y,
-					t.verts[1].color.r + colAdd, t.verts[1].color.g + colAdd, t.verts[1].color.b + colAdd, t.verts[1].color.a + colAdd,
+				t.verts[1].pos.x, t.verts[1].pos.y, 
+				t.verts[1].texPos.x, t.verts[1].texPos.y,
+				t.verts[1].color.r, 
+				t.verts[1].color.g, 
+				t.verts[1].color.b, 
+				t.verts[1].color.a,
 
-					t.verts[2].pos.x, t.verts[2].pos.y, t.verts[2].texPos.x, t.verts[2].texPos.y,
-					t.verts[2].color.r + colAdd, t.verts[2].color.g + colAdd, t.verts[2].color.b + colAdd, t.verts[2].color.a + colAdd };
-
+				t.verts[2].pos.x, t.verts[2].pos.y, 
+				t.verts[2].texPos.x, t.verts[2].texPos.y,
+				t.verts[2].color.r, 
+				t.verts[2].color.g, 
+				t.verts[2].color.b, 
+				t.verts[2].color.a
+			};
 			ret.put(data);
 		}
 		ret.flip();

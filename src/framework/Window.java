@@ -9,7 +9,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import framework.audio.Audio;
 import framework.gui.Widget;
 import framework.rendering.DrawList;
-import framework.rendering.Shader;
 import framework.rendering.Tex;
 import framework.rendering.Text;
 import framework.rendering.TileSheet;
@@ -24,20 +23,19 @@ import org.lwjgl.opengl.PixelFormat;
 
 public abstract class Window {
 	public static int width = 640, height = 480;
-	private static boolean running = true;
+	public static boolean running = true;
 
 	public static Tex atlas;
-	public static TileSheet atlasTileSheet;
+	public static TileSheet atlasTileSheet, fontTileSheet;
 	public static DrawList dl = new DrawList();
 	public static Audio audio;
 
-	public static int keyboardFrames[] = new int[Keyboard.getKeyCount()];
-	public static boolean keyboardFF[] = new boolean[Keyboard.getKeyCount()];// first
-																		// frame
-	public static boolean keyboardDown[] = new boolean[Keyboard.getKeyCount()];
-	public static boolean keyboardReleased[] = new boolean[Keyboard.getKeyCount()];
+	public static int kbFrames[] = new int[Keyboard.getKeyCount()];
+	public static boolean kbFF[] = new boolean[Keyboard.getKeyCount()];// first																		// frame
+	public static boolean kbDown[] = new boolean[Keyboard.getKeyCount()];
+	public static boolean kbRel[] = new boolean[Keyboard.getKeyCount()];
 
-	public static Shader shader;
+	//public static Shader shader;
 
 	public static Widget widget;// global selected widget
 	public static List<Widget> widgets;
@@ -50,6 +48,7 @@ public abstract class Window {
     private static long lastTime = System.nanoTime();
     private static long deltaTime = 0, cumTime = 0;
     public static int fps;
+	public boolean showFps;
 
     public void tickFps() {
         fps_frames++;
@@ -107,11 +106,14 @@ public abstract class Window {
         GL11.glOrtho(0, width, height, 0, -1, 1);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		
+        GL11.glClearColor(0, 0, 0, 1);
+		
 		//System.out.println("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION));
 
 		atlas = new Tex(atlasLoc);
 		atlasTileSheet = new TileSheet(atlas, atlasW, atlasH);
-		shader = new Shader();
+		fontTileSheet = new TileSheet(atlas, atlasW * 2, atlasH);
+		//shader = new Shader();
 		
 		audio = new Audio();
 
@@ -131,7 +133,6 @@ public abstract class Window {
 	private void tick() {
 		long n = System.nanoTime();
 		tickFps();
-		dl.clear();
 		
 		windowFocusState = Display.isActive();
 		if(windowFocusState != lastWindowFocusState && windowFocusState) {
@@ -140,20 +141,19 @@ public abstract class Window {
 		}
 		lastWindowFocusState = windowFocusState;
 
-		GL11.glClearColor(0, 0, 0, 1);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-		for (int i = 0; i < keyboardFrames.length; ++i) {
+		for (int i = 0; i < kbFrames.length; ++i) {
 			if (Keyboard.isKeyDown(i)) {
-				keyboardFrames[i]++;
-				keyboardDown[i] = true;
-			} else if (keyboardFrames[i] > 0) {
-				keyboardFrames[i] = 0;
-				keyboardDown[i] = false;
-				keyboardReleased[i] = true;
+				kbFrames[i]++;
+				kbDown[i] = true;
+			} else if (kbFrames[i] > 0) {
+				kbFrames[i] = 0;
+				kbDown[i] = false;
+				kbRel[i] = true;
 			}
-			if (keyboardFrames[i] == 1) {
-				keyboardFF[i] = true;
+			if (kbFrames[i] == 1) {
+				kbFF[i] = true;
 				onKeyPress(i);
 			}
 		}
@@ -164,19 +164,20 @@ public abstract class Window {
 		for (Widget w : widgets) {
 			w.update();
 		}
-		
-		
+
+		dl.clear();
 		frame();
 
-		Text.draw(dl, 0, 0, 1, 0, 0, new Color(1, 0, 0, 1), new Color(1, 0, 1, 1), "Fps: " + fps);
+		if(showFps) 
+			Text.draw(dl, 0, 0, 1, 0, 0, new Color(1, 0, 0, 1), new Color(1, 0, 1, 1), "Fps: " + fps);
 		
 		dl.sendToGPU();
 		dl.render();
 		Display.update();
 
-		for (int i = 0; i < keyboardReleased.length; ++i) {
-			keyboardReleased[i] = false;
-			keyboardFF[i] = false;
+		for (int i = 0; i < kbRel.length; ++i) {
+			kbRel[i] = false;
+			kbFF[i] = false;
 		}	
 
 		// Display.sync(20);

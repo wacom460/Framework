@@ -4,38 +4,38 @@ import org.lwjgl.input.Keyboard;
 
 public class Input {
 	public static boolean actionKey() {
-		return Window.keyboardFF[Keyboard.KEY_RETURN];
+		return Window.kbFF[Keyboard.KEY_RETURN];
 	}
 
 	public static boolean up() {
-		return Window.keyboardFF[Keyboard.KEY_UP];
+		return Window.kbFF[Keyboard.KEY_UP];
 	}
 
 	public static boolean down() {
-		return Window.keyboardFF[Keyboard.KEY_DOWN];
+		return Window.kbFF[Keyboard.KEY_DOWN];
 	}
 
 	public static boolean left() {
-		return Window.keyboardFF[Keyboard.KEY_LEFT];
+		return Window.kbFF[Keyboard.KEY_LEFT];
 	}
 
 	public static boolean right() {
-		return Window.keyboardFF[Keyboard.KEY_RIGHT];
+		return Window.kbFF[Keyboard.KEY_RIGHT];
 	}
 
 	public static boolean w() {
-		return Window.keyboardDown[Keyboard.KEY_W];
+		return Window.kbDown[Keyboard.KEY_W];
 	}
 
 	public static boolean a() {
-		return Window.keyboardDown[Keyboard.KEY_A];
+		return Window.kbDown[Keyboard.KEY_A];
 	}
 
 	public static boolean s() {
-		return Window.keyboardDown[Keyboard.KEY_S];
+		return Window.kbDown[Keyboard.KEY_S];
 	}
 
 	public static boolean d() {
-		return Window.keyboardDown[Keyboard.KEY_D];
+		return Window.kbDown[Keyboard.KEY_D];
 	}
 }

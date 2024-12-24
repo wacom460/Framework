@@ -5,6 +5,9 @@ import framework.RectF;
 import framework.Window;
 
 public class Text {
+	public static char special(int i) {
+		return (char)('~' + i + 1);
+	}
 	public static void draw(DrawList dl, float x, float y,
 			float scale, float originX, float originY, Color colorTop, Color colorBottom, String str) {
 		final float charH = 32;
@@ -47,13 +50,15 @@ public class Text {
 		
 		for (int i = 0; i < str.length(); ++i) {
 			char c = str.charAt(i);
-			if (c == '\n') {
-				x = ox;
-				y += charH * scale;
-				continue;
+			if(c != ' ') {
+				if (c == '\n') {
+					x = ox;
+					y += charH * scale;
+					continue;
+				}
+				RectF aloc = Window.fontTileSheet.getTexRectChar(c);
+				dl.rect(new RectF(x, y, walk, charH * scale), aloc, colorTop, colorTop, colorBottom, colorBottom);
 			}
-			RectF aloc = Window.atlasTileSheet.getTexRectChar(c);
-			dl.rect(new RectF(x, y, charH * scale, charH * scale), aloc, colorTop, colorTop, colorBottom, colorBottom);
 			x += walk;
 		}
 	}

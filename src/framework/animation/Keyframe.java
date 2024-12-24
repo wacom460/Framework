@@ -1,11 +1,20 @@
 package framework.animation;
 
-public class Keyframe<T extends Number> {
+import framework.animation.easing.EaseType;
+
+public class Keyframe {
 	public float ms;
-	public T value;
+	public float value;
+	public EaseType ease;
 	
-	public Keyframe(float ms, T value) {
+	public Keyframe(float ms, float value, EaseType ease) {
 		this.ms = ms;
 		this.value = value;
+		this.ease = ease;
+	}
+	
+	public Keyframe(Keyframe from) {
+		this.ms = from.ms;
+		this.value = from.value;
 	}
 }
