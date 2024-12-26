@@ -3,25 +3,31 @@ package framework.animation;
 import java.util.ArrayList;
 import java.util.List;
 
-import framework.Clock;
 import framework.MathStuff;
-import framework.Window;
+import framework.Timer;
 import framework.animation.easing.EaseType;
 import framework.animation.easing.Easing;
 
-public class Animated implements Runnable {
+public class Animated extends Timer /*implements Runnable*/ {
 	private List<Keyframe> keyframes = new ArrayList<>();
-	public Clock clock = new Clock();
-	private boolean reversing, pingPong, valid = true;
+	//private boolean reversing, pingPong, repeat, valid = true;
+	private Keyframe skf = new Keyframe(0, 0, EaseType.None);
 	
-	public Animated(boolean pingPong) {
+	public Animated(boolean pingPong, boolean repeat) {		
 		this.pingPong = pingPong;
-		new Thread(this).start();		
+		/*if(pingPong) repeat = true;*/
+		this.repeat = repeat;
+		/*new Thread(this).start();*/	
+		keyframes.add(skf);
 	}
 
 	public Keyframe add(float timeMs, float value, EaseType ease) {
 		if(timeMs < 0) throw new RuntimeException("timeMs must be > 0!");
+		if(timeMs > maxMs) maxMs = timeMs;
+		Keyframe last = keyframes.get(keyframes.size() - 1);
+		if(timeMs < last.ms) throw new RuntimeException("kf time must be greater than or equal to 0 if no keyframes present, or the time of the last keyframe.");
 		Keyframe kf = new Keyframe(timeMs, value, ease);
+		if(keyframes.contains(skf)) keyframes.remove(skf);
 		keyframes.add(kf);
 		keyframes.sort((a, b) -> Float.compare(a.ms, b.ms));
 		return kf;
@@ -32,8 +38,19 @@ public class Animated implements Runnable {
 		return this;
 	}
 	
+	public Animated frameDiff(float timeDelta, float valueDelta, EaseType ease) {
+		Keyframe last = keyframes.get(keyframes.size() - 1);
+		add(last.ms + timeDelta, last.value + valueDelta, ease);
+		return this;
+	}
+	
+	public void reverseOutro() {
+		reversed = true;
+		pingPong = false;
+	}
+	
 	public float get() {
-		return get(clock.elapsedMs());
+		return get(ms);
 	}
 	
 	public float get(float timeMs) {
@@ -50,11 +67,22 @@ public class Animated implements Runnable {
 		return (float) Easing.apply(kf.ease, MathStuff.scale(timeMs, kf.ms, nkf.ms, kf.value, nkf.value), kf.value, nkf.value);
 	}
 	
-	public void cleanup() {
-		valid = false;
+	public void update() {
+		if(keyframes.size() >= 0) {
+			Keyframe last = keyframes.get(keyframes.size() - 1);
+			maxMs = last.ms;
+//			if(maxMs != last.ms) throw new RuntimeException("invalid state");
+		}
+		super.update();
 	}
+	
+	/*public void cleanup() {
+		valid = false;
+	}*/
+	
+	
 
-	@Override
+/*	@Override
 	public void run() {
 		while(Window.running && valid) {
 			try {
@@ -64,11 +92,11 @@ public class Animated implements Runnable {
 			}
 			if(keyframes.size() < 1) continue;
 			Keyframe last = keyframes.get(keyframes.size() - 1);
-			if(clock.elapsedMs() > last.ms) {
+			if(timer.ms > last.ms) {
 				if(pingPong) reversing = !reversing;
-				clock.reset();
-				System.out.println("clock hit end");
+				if(repeat) timer.reset();
+				//System.out.println("clock hit end");
 			}
 		}
-	}
+	}*/
 }

@@ -15,8 +15,7 @@ public class Triangle {
 		verts[2] = v3;
 	}
 	
-	public void transform(float originX, float originY, float transX, float transY, float scaleX, float scaleY, float rotRad, float opacityMultiplier) {
-		originX = Window.width - originX; 
+	public void transform(float originX, float originY, float transX, float transY, float scaleX, float scaleY, float rotRad, float opacityMultiplier) { 
 	    for (int i = 0; i < 3; ++i) {
 	        float translatedX = verts[i].pos.x - originX + transX;
 	        float translatedY = verts[i].pos.y - originY + transY;

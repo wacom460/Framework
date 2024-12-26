@@ -169,7 +169,7 @@ public class DrawList {
 
 	public void sendToGPU() {
 		FloatBuffer vertexBuffer = generateVertArray();
-		if (trianglesFinal.size() < 1) return;		
+		if (trianglesFinal.size() < 1) return;
 		cleanup();
 		//vaoId = GL30.glGenVertexArrays();
 		vboId = GL15.glGenBuffers();

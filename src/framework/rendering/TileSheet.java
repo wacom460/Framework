@@ -16,7 +16,7 @@ public class TileSheet {
 	}
 	
 	public RectF getTexRectChar(char ch) {
-		return getTexRect(ch - 31);
+		return getTexRect(ch - ' ');
 	}
 	
 	public RectF getTexRect(int id) {

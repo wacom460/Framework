@@ -11,12 +11,10 @@ public class Widget {
 	public String text = new String();
 	public int optionIdx = 0;
 	public List<String> options = new ArrayList<>();
-	public List<Widget> children = new ArrayList<>();
 	public Vec2F pos = new Vec2F(0, 0);
-	public Vec2F origin = new Vec2F(0.5f, 0.5f);
+	public Vec2F origin = new Vec2F(0, 0);
 	public WidgetType type;
 	public Widget up = null, down = null, left = null, right = null;
-
 	private boolean clicked = false;
 
 	public boolean wasClicked() {
@@ -25,6 +23,10 @@ public class Widget {
 			return true;
 		}
 		return false;
+	}
+	
+	public void decorations() {
+		
 	}
 
 	public void update() {
@@ -40,6 +42,10 @@ public class Widget {
 			if (Input.actionKey())
 				clicked = true;
 		}
+	}
+	
+	public void render() {
+		
 	}
 
 	public Widget(WidgetType type) {

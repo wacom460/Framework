@@ -9,6 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import framework.audio.Audio;
 import framework.gui.Widget;
 import framework.rendering.DrawList;
+import framework.rendering.Shader;
 import framework.rendering.Tex;
 import framework.rendering.Text;
 import framework.rendering.TileSheet;
@@ -31,9 +32,9 @@ public abstract class Window {
 	public static Audio audio;
 
 	public static int kbFrames[] = new int[Keyboard.getKeyCount()];
-	public static boolean kbFF[] = new boolean[Keyboard.getKeyCount()];// first																		// frame
-	public static boolean kbDown[] = new boolean[Keyboard.getKeyCount()];
-	public static boolean kbRel[] = new boolean[Keyboard.getKeyCount()];
+	public static boolean kbPressed[] = new boolean[Keyboard.getKeyCount()];
+	public static boolean kbHeld[] = new boolean[Keyboard.getKeyCount()];
+	public static boolean kbReleased[] = new boolean[Keyboard.getKeyCount()];
 
 	//public static Shader shader;
 
@@ -48,7 +49,9 @@ public abstract class Window {
     private static long lastTime = System.nanoTime();
     private static long deltaTime = 0, cumTime = 0;
     public static int fps;
-	public boolean showFps;
+	public static boolean showFps;
+	
+	public static Object guiTop, guiTopEOF;
 
     public void tickFps() {
         fps_frames++;
@@ -104,9 +107,11 @@ public abstract class Window {
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
         GL11.glOrtho(0, width, height, 0, -1, 1);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);		
         GL11.glClearColor(0, 0, 0, 1);
+        
+        int mts = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
+        System.out.println("Max texture size: " + mts);
 		
 		//System.out.println("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION));
 
@@ -131,6 +136,7 @@ public abstract class Window {
 	}
 	
 	private void tick() {
+		Shader.unbindAll();
 		long n = System.nanoTime();
 		tickFps();
 		
@@ -146,14 +152,16 @@ public abstract class Window {
 		for (int i = 0; i < kbFrames.length; ++i) {
 			if (Keyboard.isKeyDown(i)) {
 				kbFrames[i]++;
-				kbDown[i] = true;
+				kbHeld[i] = true;
+				keyHeld(i);
 			} else if (kbFrames[i] > 0) {
 				kbFrames[i] = 0;
-				kbDown[i] = false;
-				kbRel[i] = true;
+				kbHeld[i] = false;
+				kbReleased[i] = true;
+				onKeyRelease(i);
 			}
 			if (kbFrames[i] == 1) {
-				kbFF[i] = true;
+				kbPressed[i] = true;
 				onKeyPress(i);
 			}
 		}
@@ -175,15 +183,18 @@ public abstract class Window {
 		dl.render();
 		Display.update();
 
-		for (int i = 0; i < kbRel.length; ++i) {
-			kbRel[i] = false;
-			kbFF[i] = false;
+		for (int i = 0; i < kbReleased.length; ++i) {
+			kbReleased[i] = false;
+			kbPressed[i] = false;
 		}	
 
 		// Display.sync(20);
 		if (Display.isCloseRequested()) running = false;
 		frameTimeTakenNs = System.nanoTime() - n;
 		framesRendered++;
+		
+		guiTopEOF = guiTop;
+		guiTop = null;
 
 		try {
 			if(framesRendered > 1 && frameTimeTakenNs > 0 && frameTimeTakenNs < 1000000) {
@@ -197,10 +208,10 @@ public abstract class Window {
 	}
 
 	protected abstract void init();
-	protected abstract void cleanup();
+	protected void cleanup() {}
 	protected abstract void frame();
 	
-	public void onKeyPress(int i) {
-		
-	}
+	public void onKeyPress(int i) {}
+	public void keyHeld(int i) {}
+	public void onKeyRelease(int i) {}
 }

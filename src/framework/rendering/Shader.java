@@ -12,6 +12,10 @@ import framework.Window;
 public class Shader {
 	private int programId;
 
+	public static void unbindAll() {
+		GL20.glUseProgram(0);
+	}
+	
 	public void bind() {
 		GL20.glUseProgram(programId);
 
