@@ -1,17 +1,30 @@
 package framework;
 
+
 public class Timer {
 	private Clock clock = new Clock();
 	public float ms, minMs, maxMs = Float.MAX_VALUE, maxUpdateDelta = 20;
 	public boolean reversed, pingPong, repeat;
+	private long lastUpdateFrame = -1;
 	
-	public Timer() {}
+	private void register() {
+		Window.timers.add(this);
+	}
+	
+	public void cleanup() {
+		Window.timers.remove(this);
+	}
+	
+	public Timer() {
+		register();
+	}
 	
 	public Timer(float ms, float minMs, float maxMs, boolean reversed) {
 		this.ms = ms;
 		this.minMs = minMs;
 		this.maxMs = maxMs;
 		this.reversed = reversed;
+		register();
 	}
 	
 	public void update() {
@@ -29,6 +42,9 @@ public class Timer {
 		}
 		ms = MathStuff.clamp(oMs, minMs, maxMs);
 		clock.reset();
+		if(lastUpdateFrame == Window.getFramesRenderedCount()) 
+			throw new RuntimeException("called update on timer twice in one frame...");
+		lastUpdateFrame = Window.getFramesRenderedCount();
 	}
 
 	public void reset() {

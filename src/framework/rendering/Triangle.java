@@ -4,7 +4,6 @@ import java.util.List;
 
 import framework.RectF;
 import framework.Vec2F;
-import framework.Window;
 
 public class Triangle {
 	Vertex[] verts = new Vertex[3];
@@ -13,6 +12,20 @@ public class Triangle {
 		verts[0] = v1;
 		verts[1] = v2;
 		verts[2] = v3;
+	}
+	
+	public void explode(float originX, float originY, float distX, float distY) {
+		for(Vertex v : verts) {
+			v.pos.explode(originX, originY, distX, distY);
+		}
+	}
+	
+	public static void explode(List<Triangle> tris, float originX, float originY, float distX, float distY) {
+		int c = 0;
+		for(Triangle t : tris) {
+			t.explode(originX, originY, distX + (0.05f * c), distY);
+			++c;
+		}
 	}
 	
 	public void transform(float originX, float originY, float transX, float transY, float scaleX, float scaleY, float rotRad, float opacityMultiplier) { 

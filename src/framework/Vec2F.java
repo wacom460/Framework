@@ -34,4 +34,10 @@ public class Vec2F {
         Vec2F v = (Vec2F) obj;
         return x == v.x && y == v.y;
     }
+	
+	public void explode(float originX, float originY, float distX, float distY) {
+		double angle = Math.atan2(y - originY, x - originX);
+        x = (float) (originX + Math.cos(angle) * distX);
+        y = (float) (originY + Math.sin(angle) * distY);
+	}
 }

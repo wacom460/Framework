@@ -14,7 +14,7 @@ public class Widget {
 	public Vec2F pos = new Vec2F(0, 0);
 	public Vec2F origin = new Vec2F(0, 0);
 	public WidgetType type;
-	public Widget up = null, down = null, left = null, right = null;
+	public Widget up = null, down = null, left = null, right = null, last = null;
 	private boolean clicked = false;
 
 	public boolean wasClicked() {
@@ -23,6 +23,10 @@ public class Widget {
 			return true;
 		}
 		return false;
+	}
+	
+	public void clicked() {
+		
 	}
 	
 	public void decorations() {

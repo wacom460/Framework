@@ -25,7 +25,6 @@ public class ExampleGame extends Window {
 	
 	@Override
 	protected void frame() {
-		anim.update();
 		dl.rect(new RectF(150, 130, 100, 100), RectF.zero, Color.red, Color.red, Color.black, Color.red);
 		dl.transformCenter(0, 0, 0, 0, 1, 1, anim.get(), 1);
 	}

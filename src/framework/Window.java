@@ -31,10 +31,10 @@ public abstract class Window {
 	public static DrawList dl = new DrawList();
 	public static Audio audio;
 
-	public static int kbFrames[] = new int[Keyboard.getKeyCount()];
-	public static boolean kbPressed[] = new boolean[Keyboard.getKeyCount()];
-	public static boolean kbHeld[] = new boolean[Keyboard.getKeyCount()];
-	public static boolean kbReleased[] = new boolean[Keyboard.getKeyCount()];
+	public static int kbFrames[] = new int[Keyboard.KEYBOARD_SIZE];
+	public static boolean kbPressed[] = new boolean[Keyboard.KEYBOARD_SIZE];
+	public static boolean kbHeld[] = new boolean[Keyboard.KEYBOARD_SIZE];
+	public static boolean kbReleased[] = new boolean[Keyboard.KEYBOARD_SIZE];
 
 	//public static Shader shader;
 
@@ -44,6 +44,11 @@ public abstract class Window {
 	private static boolean lastWindowFocusState;
 	
 	private static long framesRendered = 0;
+	
+	public static long getFramesRenderedCount() {
+		return framesRendered;
+	}
+
 	private static long frameTimeTakenNs = 0;
 	private static int fps_frames = 0;
     private static long lastTime = System.nanoTime();
@@ -67,6 +72,7 @@ public abstract class Window {
     }
 	
 	public static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	public static List<Timer> timers = new ArrayList<>();
 
 	public static void setWidget(Widget w) {
 		widget = w;
@@ -125,9 +131,7 @@ public abstract class Window {
 		//all framework features must be initialized before calling init!
 		init();
 
-		while (running) {
-			tick();
-		}
+		while (running) tick();
 		
 		cleanup();
 		
@@ -169,9 +173,9 @@ public abstract class Window {
 		atlas.bind();
 		//shader.bind();
 
-		for (Widget w : widgets) {
-			w.update();
-		}
+		for (Widget w : widgets) w.update();
+		
+		for(Timer t : timers) t.update();
 
 		dl.clear();
 		frame();

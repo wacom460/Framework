@@ -6,8 +6,10 @@ import framework.Vec2F;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
@@ -29,6 +31,16 @@ public class DrawList {
 
 	public Triangle add(Vertex v1, Vertex v2, Vertex v3) {
 		return add(new Triangle(v1, v2, v3));
+	}
+	
+	public void add(List<Triangle> tris) {
+		for(Triangle t : tris) {
+			workingTriangles.add(t.clone());
+		}
+	}
+	
+	public void add(DrawList list) {
+		add(list.workingTriangles);
 	}
 
 	public void line(Vec2F p1, Vec2F p2, 
@@ -71,6 +83,74 @@ public class DrawList {
 		);
 	}
 
+	public void rectLines(RectF dest, Color c1, Color c2, Color c3, Color c4,
+			float thickness1, float thickness2, float thickness3, float thickness4) {
+		line(
+			dest.pos, 
+			new Vec2F(dest.pos.x + dest.size.x, dest.pos.y),
+			c1,
+			c1, 
+			c2,
+			c2,
+			Vec2F.zero,
+			Vec2F.zero,
+			Vec2F.zero,
+			Vec2F.zero,
+			thickness1,
+			thickness1,
+			thickness1,
+			thickness1
+		);
+		line(
+			new Vec2F(dest.pos.x + dest.size.x, dest.pos.y), 
+			new Vec2F(dest.pos.x + dest.size.x, dest.pos.y + dest.size.y),
+			c2,
+			c2, 
+			c3,
+			c3,
+			Vec2F.zero,
+			Vec2F.zero,
+			Vec2F.zero,
+			Vec2F.zero,
+			thickness2,
+			thickness2,
+			thickness2,
+			thickness2
+		);
+		line(
+			new Vec2F(dest.pos.x + dest.size.x, dest.pos.y + dest.size.y), 
+			new Vec2F(dest.pos.x, dest.pos.y + dest.size.y),
+			c3,
+			c3, 
+			c4,
+			c4,
+			Vec2F.zero,
+			Vec2F.zero,
+			Vec2F.zero,
+			Vec2F.zero,
+			thickness3,
+			thickness3,
+			thickness3,
+			thickness3
+		);
+		line(
+			new Vec2F(dest.pos.x, dest.pos.y + dest.size.y), 
+			new Vec2F(dest.pos.x, dest.pos.y),
+			c4,
+			c4, 
+			c1,
+			c1,
+			Vec2F.zero,
+			Vec2F.zero,
+			Vec2F.zero,
+			Vec2F.zero,
+			thickness4,
+			thickness4,
+			thickness4,
+			thickness4
+		);
+	}
+	
 	public void rect(RectF dest, RectF src, 
 			Color c1, Color c2, Color c3, Color c4) 
 	{
@@ -96,6 +176,10 @@ public class DrawList {
 	public void dupe() {
 		for(Triangle t : workingTriangles)
 			trianglesFinal.add(t.clone());
+	}
+	
+	public void explode(float originX, float originY, float distX, float distY) {
+		Triangle.explode(workingTriangles, originX, originY, distX, distY);
 	}
 	
 	//call after supplying triangles
