@@ -33,6 +33,8 @@ public class WidgetSet {
 	}
 	
 	public WidgetSet at(float x, float y, float originX, float originY) {
+		rect.pos.x = x;
+		rect.pos.y = y;
 		return this;
 	}
 	
@@ -50,9 +52,12 @@ public class WidgetSet {
 		return this;
 	}
 	
-	public void place() {
+	public WidgetSet place() {
+		float x = rect.pos.x, y = rect.pos.y;
 		for(Widget w : widgets) {
-			
+			w.setPos(x, y);
+			y += w.rect.size.y + 5;
 		}
+		return this;
 	}
 }

@@ -1,6 +1,7 @@
 package framework.gui;
 
 import framework.Input;
+import framework.RectF;
 import framework.Vec2F;
 import framework.Window;
 
@@ -11,7 +12,7 @@ public class Widget {
 	public String text = new String();
 	public int optionIdx = 0;
 	public List<String> options = new ArrayList<>();
-	public Vec2F pos = new Vec2F(0, 0);
+	public RectF rect = new RectF();
 	public Vec2F origin = new Vec2F(0, 0);
 	public WidgetType type;
 	public Widget up = null, down = null, left = null, right = null, last = null;
@@ -23,6 +24,10 @@ public class Widget {
 			return true;
 		}
 		return false;
+	}
+	
+	public void init() {
+		
 	}
 	
 	public void clicked() {
@@ -56,15 +61,17 @@ public class Widget {
 		this.type = type;
 		Window.widgets.add(this);
 		options.add("None");
+		init();
 	}
 
 	public Widget(WidgetType type, String text) {
 		this(type);
 		this.text = text;
+		init();
 	}
 
 	public Widget setPos(float x, float y) {
-		pos.set(x, y);
+		rect.pos.set(x, y);
 		return this;
 	}
 

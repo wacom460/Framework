@@ -1,12 +1,11 @@
 package framework.audio;
-import java.util.Hashtable;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 
 public class Audio {
-	public Hashtable<String, SfxEvent> sfxs = new Hashtable<>();
-	public int count = 0;
+	//public Hashtable<String, SfxEvent> sfxs = new Hashtable<>();
+//	public int count = 0;
+	public SourcePool pool;
 	
 	public Audio() {
 		try {
@@ -14,6 +13,7 @@ public class Audio {
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
+		pool = new SourcePool();
 	}
 	
 	public void update() {

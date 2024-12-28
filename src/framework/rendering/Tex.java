@@ -1,5 +1,4 @@
 package framework.rendering;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
@@ -22,9 +21,7 @@ public class Tex {
 			texture = null;
 		}
         try {
-        	FileInputStream fis = new FileInputStream("./res/" + path);
-			texture = TextureLoader.getTexture("PNG", fis);
-			fis.close();
+			texture = TextureLoader.getTexture("PNG", Tex.class.getResourceAsStream("/" + path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,27 +1,26 @@
 package framework.rendering;
 
-import framework.Color;
-import framework.RectF;
-import framework.Vec2F;
-
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
+import framework.Color;
+import framework.RectF;
+import framework.Vec2F;
+
 public class DrawList {
-	public ArrayList<Triangle> workingTriangles = new ArrayList<>();
-	public ArrayList<Triangle> trianglesFinal = new ArrayList<>();
+	public List<Triangle> workingTriangles = new ArrayList<>();
+	public List<Triangle> trianglesFinal = new ArrayList<>();
 	int /*vaoId = 0, */vboId = 0;
 	public boolean debug = false;
 
 	public void clear() {
 		workingTriangles.clear();
-		trianglesFinal.clear();
+		trianglesFinal.clear();		
 	}
 
 	public Triangle add(Triangle t) {
@@ -72,13 +71,13 @@ public class DrawList {
 
 		add(
 			new Vertex(x11, y11, tc1.x, tc1.y, col1), 
-			new Vertex(x12, y12, tc2.x, tc2.y, col1), 
-			new Vertex(x21, y21, tc3.x, tc3.y, col2)
+			new Vertex(x12, y12, tc2.x, tc2.y, col2), 
+			new Vertex(x21, y21, tc3.x, tc3.y, col4)
 		);
 		
 		add(
-			new Vertex(x21, y21, tc3.x, tc3.y, col2), 
-			new Vertex(x22, y22, tc4.x, tc4.y, col2), 
+			new Vertex(x21, y21, tc3.x, tc3.y, col4), 
+			new Vertex(x22, y22, tc4.x, tc4.y, col3), 
 			new Vertex(x12, y12, tc2.x, tc2.y, col1)
 		);
 	}

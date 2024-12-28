@@ -1,26 +1,20 @@
 package framework.audio;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.nio.FloatBuffer;
-import java.util.concurrent.TimeUnit;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
-import org.lwjgl.util.WaveData;
 
 import framework.Window;
 
 public class SfxEvent {
 	public String name;
-	public int source;
+	//public int source;
 	public FloatBuffer sourcePos;
 	public FloatBuffer sourceVel;
 	public FloatBuffer listenerPos;
 	public FloatBuffer listenerVel;
 	public FloatBuffer listenerOri;	
-	public WaveData waveFile;
 
 	public SfxEvent(String name, float listenerPosX, float listenerPosY, float x, float y, float pitch, float volume) {
 		this.name = name;
@@ -37,22 +31,18 @@ public class SfxEvent {
 	    listenerVel.flip();
 	    listenerOri.flip();
 
-		try {
-			waveFile = WaveData.create(new BufferedInputStream(new FileInputStream("./res/" + name + ".wav")));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 		int buffer = AudioBuffer.get(name);
-		AL10.alBufferData(buffer, waveFile.format, waveFile.data, waveFile.samplerate);
-	    waveFile.dispose();
 	    
-	    source = AL10.alGenSources();
-	    if (AL10.alGetError() != AL10.AL_NO_ERROR) {
-	    	System.out.println("OpenAL source Error");
+	   /* source = AL10.alGenSources();
+	    int rv = AL10.alGetError();
+	    if (rv != AL10.AL_NO_ERROR) {
+	    	System.out.println("OpenAL source Error " + rv);
 	    	return;
-	    }	    
+	    }	*/
+	    
+	    int source = Window.audio.pool.getFree(buffer);
 
-	    AL10.alSourcei(source, AL10.AL_BUFFER, buffer);
+	    //AL10.alSourcei(source, AL10.AL_BUFFER, buffer);
 	    AL10.alSourcef(source, AL10.AL_PITCH, pitch);
 	    AL10.alSourcef(source, AL10.AL_GAIN, volume);
 	    AL10.alSource (source, AL10.AL_POSITION, sourcePos);
@@ -62,18 +52,9 @@ public class SfxEvent {
 	    AL10.alListener(AL10.AL_VELOCITY, listenerVel);
 	    AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
 	    	    
-	    Window.audio.sfxs.put(Window.audio.count + "_" + name, this);
-	    Window.audio.count++;
+	    /*Window.audio.sfxs.put(Window.audio.count + "_" + name, this);*/
+//	    Window.audio.count++;
 	    
 	    AL10.alSourcePlay(source);
-	    
-	    Runnable task = () -> cleanup();
-	    //TODO: get actual length of wave file
-	    Window.scheduler.schedule(task, 4, TimeUnit.SECONDS);
-	}
-	
-	public void cleanup() {
-		System.out.println("Cleaned up source " + source);
-	    AL10.alDeleteSources(source);
 	}
 }

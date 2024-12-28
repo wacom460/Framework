@@ -1,18 +1,7 @@
 package framework;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-import framework.audio.Audio;
-import framework.gui.Widget;
-import framework.rendering.DrawList;
-import framework.rendering.Shader;
-import framework.rendering.Tex;
-import framework.rendering.Text;
-import framework.rendering.TileSheet;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -21,6 +10,14 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
+
+import framework.audio.Audio;
+import framework.gui.Widget;
+import framework.rendering.DrawList;
+import framework.rendering.Shader;
+import framework.rendering.Tex;
+import framework.rendering.Text;
+import framework.rendering.TileSheet;
 
 public abstract class Window {
 	public static int width = 640, height = 480;
@@ -71,7 +68,6 @@ public abstract class Window {
         }
     }
 	
-	public static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	public static List<Timer> timers = new ArrayList<>();
 
 	public static void setWidget(Widget w) {
@@ -79,7 +75,7 @@ public abstract class Window {
 	}
 	
 	public Window(String title, int width, int height, String atlasLoc, int atlasW, int atlasH, int winLocX, int winLocY) {
-    	try {
+/*    	try {
 			File resFolder = new File("./res/");
 	        if (!(resFolder.exists() && resFolder.isDirectory())) {
 				throw new RuntimeException("res folder doesn't exist! can't continue!");
@@ -91,7 +87,7 @@ public abstract class Window {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
-		}
+		}*/
 		Window.width = width;
 		Window.height = height;
 
@@ -173,11 +169,20 @@ public abstract class Window {
 		atlas.bind();
 		//shader.bind();
 
-		for (Widget w : widgets) w.update();
+		dl.clear();
+		
+		for (Widget w : widgets) {
+			w.update();
+			Color c = new Color(0, 0, 0, 0.2f);
+			dl.rect(w.rect, RectF.zero, c, c, c, c);
+			Color c2 = new Color(0, 1, 0, 0.75f);
+			dl.rectLines(w.rect, 
+					c2, c2, c2, c2, 
+					2, 2, 2, 2);
+		}
 		
 		for(Timer t : timers) t.update();
 
-		dl.clear();
 		frame();
 
 		if(showFps) 
@@ -192,7 +197,7 @@ public abstract class Window {
 			kbPressed[i] = false;
 		}	
 
-		// Display.sync(20);
+		Display.sync(20);
 		if (Display.isCloseRequested()) running = false;
 		frameTimeTakenNs = System.nanoTime() - n;
 		framesRendered++;
