@@ -11,6 +11,12 @@ public class AudioBuffer {
 	
 	public static int get(String name) {
 		if(bufs.containsKey(name)) return bufs.get(name);
+
+		WaveData waveFile = WaveData.create(new BufferedInputStream(AudioBuffer.class.getResourceAsStream("/" + name + ".wav")));
+		if(waveFile == null) {
+			System.out.println("Error playing " + name);
+			return -1;
+		}
 		
 		int buffer = AL10.alGenBuffers();
 		int rv = AL10.alGetError();
@@ -19,7 +25,6 @@ public class AudioBuffer {
 			return 0;
 		}		
 
-		WaveData waveFile = WaveData.create(new BufferedInputStream(AudioBuffer.class.getResourceAsStream("/" + name + ".wav")));
 		AL10.alBufferData(buffer, waveFile.format, waveFile.data, waveFile.samplerate);
 	    waveFile.dispose();
 		bufs.put(name, buffer);

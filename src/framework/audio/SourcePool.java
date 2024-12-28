@@ -10,6 +10,13 @@ public class SourcePool {
 	public static final int maxSources = 256;
 	
 	public SourcePool() {
+		reset();
+	}
+	
+	public void reset() {
+		for(Integer i : sources) {
+			AL10.alDeleteSources(i);
+		}
 		for(int i = 0; i < maxSources; i++) {
 			sources.add(genSource());
 		}

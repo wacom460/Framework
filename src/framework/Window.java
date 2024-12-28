@@ -112,8 +112,10 @@ public abstract class Window {
         GL11.glMatrixMode(GL11.GL_MODELVIEW);		
         GL11.glClearColor(0, 0, 0, 1);
         
-        int mts = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
-        System.out.println("Max texture size: " + mts);
+		/*
+		 * int mts = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
+		 * System.out.println("Max texture size: " + mts);
+		 */
 		
 		//System.out.println("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION));
 
@@ -173,12 +175,12 @@ public abstract class Window {
 		
 		for (Widget w : widgets) {
 			w.update();
-			Color c = new Color(0, 0, 0, 0.2f);
-			dl.rect(w.rect, RectF.zero, c, c, c, c);
-			Color c2 = new Color(0, 1, 0, 0.75f);
-			dl.rectLines(w.rect, 
-					c2, c2, c2, c2, 
-					2, 2, 2, 2);
+//			Color c = new Color(0, 0, 0, 0.2f);
+//			dl.rect(w.rect, RectF.zero, c, c, c, c);
+//			Color c2 = new Color(0, 1, 0, 0.75f);
+//			dl.rectLines(w.rect, 
+//					c2, c2, c2, c2, 
+//					2, 2, 2, 2);
 		}
 		
 		for(Timer t : timers) t.update();
@@ -197,7 +199,7 @@ public abstract class Window {
 			kbPressed[i] = false;
 		}	
 
-		Display.sync(20);
+		Display.sync(60);
 		if (Display.isCloseRequested()) running = false;
 		frameTimeTakenNs = System.nanoTime() - n;
 		framesRendered++;
@@ -205,15 +207,15 @@ public abstract class Window {
 		guiTopEOF = guiTop;
 		guiTop = null;
 
-		try {
-			if(framesRendered > 1 && frameTimeTakenNs > 0 && frameTimeTakenNs < 1000000) {
-				Thread.sleep(0, 1000000 - (int)frameTimeTakenNs);
-			} else {
-				//Thread.sleep(1, 0);
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			if(framesRendered > 1 && frameTimeTakenNs > 0 && frameTimeTakenNs < 1000000) {
+//				Thread.sleep(0, 1000000 - (int)frameTimeTakenNs);
+//			} else {
+//				//Thread.sleep(1, 0);
+//			}
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	protected abstract void init();

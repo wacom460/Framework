@@ -1,8 +1,8 @@
 package framework.gui;
 
-import java.util.Date;
 import java.util.Random;
 
+import framework.Clock;
 import framework.Color;
 
 public class RGBIterator {
@@ -10,8 +10,8 @@ public class RGBIterator {
 	private Random rand = new Random();
 	private EColorSel sel = EColorSel.R;
 	private EOperator op = EOperator.PLUS;
-	private long colorInterval, colorTime = new Date().getTime() + colorInterval;
-	private int dr, dg, db, r, g, b, c, p = 100;
+	private Clock clock = new Clock();
+	private int dr, dg, db, r, g, b, c, p;
 	
 	public RGBIterator(int sr, int sg, int sb) {
 		dr = sr;
@@ -23,8 +23,11 @@ public class RGBIterator {
 	}
 	
 	public Color getNext(float alpha) {
-		if(colorTime < new Date().getTime()) {
-			colorTime = new Date().getTime() + colorInterval;
+		return getNext(alpha, 7);
+	}
+	
+	public Color getNext(float alpha, int add) {
+		if(clock.once(2)) {
 			if(op == EOperator.PLUS) {
 				if(r > 254) sel = EColorSel.G;
 				if(g > 254)  sel = EColorSel.B;
@@ -55,7 +58,7 @@ public class RGBIterator {
 		b = b > 255 ? 255 : b;
 		Color color = new Color((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, alpha);
 		c = ((r + g + b) / 3) / 86;
-		p = c < 1 ? 1 : c;
+		p = (c < 1 ? 1 : c) * add;
 		return color;
 	}
 
