@@ -6,10 +6,19 @@ import framework.Clock;
 import framework.Color;
 
 public class RGBIterator {
-	
+	public enum Operator {
+		
+		PLUS, MINUS, DIVIDE, SUBTRACT;
+
+	}
+	public enum ColorSel {
+		
+		R, G, B;
+
+	}
 	private Random rand = new Random();
-	private EColorSel sel = EColorSel.R;
-	private EOperator op = EOperator.PLUS;
+	private ColorSel sel = ColorSel.R;
+	private Operator op = Operator.PLUS;
 	private Clock clock = new Clock();
 	private int dr, dg, db, r, g, b, c, p;
 	
@@ -28,29 +37,29 @@ public class RGBIterator {
 	
 	public Color getNext(float alpha, int add) {
 		if(clock.once(2)) {
-			if(op == EOperator.PLUS) {
-				if(r > 254) sel = EColorSel.G;
-				if(g > 254)  sel = EColorSel.B;
+			if(op == Operator.PLUS) {
+				if(r > 254) sel = ColorSel.G;
+				if(g > 254)  sel = ColorSel.B;
 				if(b > 254) {
-					sel = EColorSel.R;
-					op = EOperator.MINUS;
+					sel = ColorSel.R;
+					op = Operator.MINUS;
 				}
 			} else {
-				if(r < 100) sel = EColorSel.G;
-				if(g < 0) sel = EColorSel.B;
+				if(r < 100) sel = ColorSel.G;
+				if(g < 0) sel = ColorSel.B;
 				if(b < 130) {
-					sel = EColorSel.R;
-					op = EOperator.PLUS;
+					sel = ColorSel.R;
+					op = Operator.PLUS;
 				}
 			}
-			if(op == EOperator.PLUS) {
-				if(sel == EColorSel.R) r += p;
-				if(sel == EColorSel.G) g += p;
-				if(sel == EColorSel.B) b += p;
+			if(op == Operator.PLUS) {
+				if(sel == ColorSel.R) r += p;
+				if(sel == ColorSel.G) g += p;
+				if(sel == ColorSel.B) b += p;
 			} else {
-				if(sel == EColorSel.R) r -= p;
-				if(sel == EColorSel.G) g -= p;
-				if(sel == EColorSel.B) b -= p;
+				if(sel == ColorSel.R) r -= p;
+				if(sel == ColorSel.G) g -= p;
+				if(sel == ColorSel.B) b -= p;
 			}
 		}
 		r = r > 255 ? 255 : r;
