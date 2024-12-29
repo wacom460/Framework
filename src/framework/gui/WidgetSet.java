@@ -24,7 +24,7 @@ public class WidgetSet {
 	}
 	
 	public void render() {
-		
+		for(Widget w : widgets) w.render();
 	}
 	
 	public WidgetSet add(Widget w) {

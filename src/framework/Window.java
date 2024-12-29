@@ -46,7 +46,7 @@ public abstract class Window {
 		return framesRendered;
 	}
 
-	private static long frameTimeTakenNs = 0;
+	/*private static long frameTimeTakenNs = 0;*/
 	private static int fps_frames = 0;
     private static long lastTime = System.nanoTime();
     private static long deltaTime = 0, cumTime = 0;
@@ -136,10 +136,10 @@ public abstract class Window {
 		audio.cleanup();
 		Display.destroy();
 	}
-	
+
 	private void tick() {
 		Shader.unbindAll();
-		long n = System.nanoTime();
+		/*long n = System.nanoTime();*/
 		tickFps();
 		
 		windowFocusState = Display.isActive();
@@ -201,7 +201,7 @@ public abstract class Window {
 
 		Display.sync(60);
 		if (Display.isCloseRequested()) running = false;
-		frameTimeTakenNs = System.nanoTime() - n;
+		/*frameTimeTakenNs = System.nanoTime() - n;*/
 		framesRendered++;
 		
 		guiTopEOF = guiTop;
