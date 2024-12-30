@@ -15,6 +15,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/slick-util.jar"/>
 	<classpathentry kind="lib" path="lib/jbox2d-library-2.2.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/codei/workspace/Framework/lib/kryonet-2.21-all.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet-2.21-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
