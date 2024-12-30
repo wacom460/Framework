@@ -50,5 +50,6 @@ public class Timer {
 	public void reset() {
 		ms = 0;
 		clock.reset();
+		reversed = false;
 	}
 }

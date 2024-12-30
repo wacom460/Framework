@@ -51,7 +51,7 @@ public class SfxEvent {
 	    AL10.alListener(AL10.AL_POSITION, listenerPos);
 	    AL10.alListener(AL10.AL_VELOCITY, listenerVel);
 	    AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
-	    	    
+	    
 	    /*Window.audio.sfxs.put(Window.audio.count + "_" + name, this);*/
 //	    Window.audio.count++;
 	    

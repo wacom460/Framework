@@ -33,7 +33,7 @@ public class ExampleGame extends Window {
 		dl.rect(new RectF(150, 130, 100, 100), RectF.zero, Color.red, Color.red, Color.black, Color.red);
 		dl.transformCenter(0, 0, 0, 0, 1, 1, anim.get(), 1);
 		Text.draw(dl, 10, 300, 2, 0, 0.5f, Color.white, Color.red, "Press space");
-		if(kbPressed[Keyboard.KEY_SPACE])
+		if(keyPressed(Keyboard.KEY_SPACE))
 			audio.playSfx("menuclick", 0, 0, (float)new Random().nextGaussian(), ((float)new Random().nextGaussian() % 1f) - 0.5f, new Random().nextFloat() % 1.0f, new Random().nextFloat());
 	}
 

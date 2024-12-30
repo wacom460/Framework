@@ -1,12 +1,14 @@
 package framework.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import framework.Color;
 import framework.Input;
 import framework.RectF;
 import framework.Vec2F;
 import framework.Window;
-
-import java.util.ArrayList;
-import java.util.List;
+import framework.rendering.Text;
 
 public class Widget {
 	public String text = new String();
@@ -16,15 +18,12 @@ public class Widget {
 	public Vec2F origin = new Vec2F(0, 0);
 	public WidgetType type;
 	public Widget up = null, down = null, left = null, right = null, last = null;
-	private boolean clicked = false;
+//	private boolean clicked = false;
 
-	public boolean wasClicked() {
-		if (clicked) {
-			clicked = false;
-			return true;
-		}
-		return false;
-	}
+	/*
+	 * public boolean wasClicked() { if (clicked) { clicked = false; return true; }
+	 * return false; }
+	 */
 	
 	public void init() {
 		
@@ -39,7 +38,7 @@ public class Widget {
 	}
 
 	public void update() {
-		if (this == Window.widget) {
+		if (this == Window.getWidget()) {
 			if (Input.up() && up != null)
 				Window.setWidget(up);
 			if (Input.down() && down != null)
@@ -48,13 +47,23 @@ public class Widget {
 				Window.setWidget(left);
 			if (Input.right() && right != null)
 				Window.setWidget(right);
-			if (Input.actionKey())
-				clicked = true;
+			if (Input.actionKey()) {
+				/*clicked = true;*/
+				clicked();
+			}
 		}
 	}
 	
 	public void render() {
-		
+		switch(type) {
+		case TextButton:
+			
+		case Text:
+			Text.draw(Window.dl, rect.pos.x, rect.pos.y, 1, 0, 0, Color.red, Color.white, text);
+			break;
+		default:
+			break;		
+		}
 	}
 
 	public Widget(WidgetType type) {

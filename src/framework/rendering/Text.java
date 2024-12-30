@@ -5,13 +5,15 @@ import framework.RectF;
 import framework.Window;
 
 public class Text {
+	public static final float charH = 32;
+	public static final float charW = (charH / 2) - 2;
+	
 	public static char special(int i) {
 		return (char)('~' + i + 1);
 	}
 	public static void draw(DrawList dl, float x, float y,
 			float scale, float originX, float originY, Color colorTop, Color colorBottom, String str) {
-		final float charH = 32;
-		final float walk = ((charH / 2) - 2) * scale;
+		final float walk = charW * scale;
 		final float ox = x;
 		final float oy = y;
 		float maxW = 0;

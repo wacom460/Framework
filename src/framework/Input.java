@@ -4,23 +4,23 @@ import org.lwjgl.input.Keyboard;
 
 public class Input {
 	public static boolean actionKey() {
-		return Window.kbPressed[Keyboard.KEY_RETURN];
+		return Window.keyPressed(Keyboard.KEY_RETURN);
 	}
 
 	public static boolean up() {
-		return Window.kbPressed[Keyboard.KEY_UP];
+		return Window.keyPressed(Keyboard.KEY_UP);
 	}
 
 	public static boolean down() {
-		return Window.kbPressed[Keyboard.KEY_DOWN];
+		return Window.keyPressed(Keyboard.KEY_DOWN);
 	}
 
 	public static boolean left() {
-		return Window.kbPressed[Keyboard.KEY_LEFT];
+		return Window.keyPressed(Keyboard.KEY_LEFT);
 	}
 
 	public static boolean right() {
-		return Window.kbPressed[Keyboard.KEY_RIGHT];
+		return Window.keyPressed(Keyboard.KEY_RIGHT);
 	}
 
 	public static boolean w() {

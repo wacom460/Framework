@@ -21,4 +21,9 @@ public class Color {
 		this.b = (float) b;
 		this.a = (float) a;
 	}
+	
+	@Override
+	public Color clone() {
+		return new Color(r, g, b, a);
+	}
 }

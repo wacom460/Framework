@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import framework.RectF;
+import framework.rendering.Text;
 
 public class WidgetSet {
 	public WidgetSetType type = WidgetSetType.Vertical;
@@ -56,6 +57,7 @@ public class WidgetSet {
 		float x = rect.pos.x, y = rect.pos.y;
 		for(Widget w : widgets) {
 			w.setPos(x, y);
+			w.rect.setSize(w.text.length() * Text.charW, Text.charH);
 			y += w.rect.size.y + 5;
 		}
 		return this;

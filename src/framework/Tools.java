@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class Tools {
+public final class Tools {
 	public static boolean makeDirectory(String path) {
 		File dir = new File(path);
 		return dir.mkdir();

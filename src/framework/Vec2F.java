@@ -40,4 +40,20 @@ public class Vec2F {
         x = (float) (originX + Math.cos(angle) * distX);
         y = (float) (originY + Math.sin(angle) * distY);
 	}
+	
+	/*public Vec2F tween(Vec2F v, float t) {
+		return tween(this, v, t);
+	}*/
+	
+	public static Vec2F tween(Vec2F start, Vec2F end, float t) {
+        t = Math.max(0, Math.min(1, t));
+        return new Vec2F(
+            start.x + t * (end.x - start.x),
+            start.y + t * (end.y - start.y)
+        );
+    }
+
+	public void set(Vec2F pos) {
+		set(pos.x, pos.y);
+	}
 }
