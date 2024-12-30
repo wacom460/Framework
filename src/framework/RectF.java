@@ -61,6 +61,10 @@ public class RectF {
 		return new Vec2F(pos.x, pos.y);
 	}
 	
+	public Vec2F center() {
+		return new Vec2F(pos.x + (size.x / 2), pos.y + (size.y / 2));
+	}
+	
 	public Vec2F topRight() {
 		return new Vec2F(pos.x + size.x, pos.y);
 	}

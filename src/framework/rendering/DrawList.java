@@ -168,8 +168,8 @@ public class DrawList {
 	//call when you want to make the previously added
 	//triangles immutable to transforms
 	public void checkpoint() {
-		if(trianglesFinal.addAll(workingTriangles))
-			workingTriangles.clear();
+		trianglesFinal.addAll(workingTriangles);
+		workingTriangles.clear();
 	}
 	
 	public void dupe() {

@@ -93,6 +93,7 @@ public abstract class Window {
 		if(w != null) toRect.set(w.rect);
 		else toRect.set(RectF.zero);
 		guiAnim.reset();
+		audio.playSfx("menu");
 		return w;
 	}
 	

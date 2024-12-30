@@ -49,6 +49,7 @@ public class Widget {
 				Window.setWidget(right);
 			if (Input.actionKey()) {
 				/*clicked = true;*/
+				Window.audio.playSfx("menu_action");
 				clicked();
 			}
 		}
