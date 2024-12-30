@@ -1,6 +1,9 @@
 package framework;
 
-public class Vec2I {
+import java.io.Serializable;
+
+public class Vec2I implements Serializable {
+	private static final long serialVersionUID = -1775821520949968816L;
 	public int x, y;
 	
 	public Vec2I() {
