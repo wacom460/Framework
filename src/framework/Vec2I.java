@@ -27,4 +27,9 @@ public class Vec2I {
         Vec2I v = (Vec2I) obj;
         return x == v.x && y == v.y;
     }
+	
+	@Override
+	public Vec2I clone() {
+		return new Vec2I(x, y);
+	}
 }
