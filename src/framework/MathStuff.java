@@ -8,6 +8,7 @@ public class MathStuff {
 	}
 	
 	public static float clamp(float value, float min, float max) {
+		if(min > max) return clamp(value, max, min);
 		return value < min ? min : value > max ? max : value;
 	}
 }

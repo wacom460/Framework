@@ -8,6 +8,8 @@ import framework.Input;
 import framework.RectF;
 import framework.Vec2F;
 import framework.Window;
+import framework.animation.Animated;
+import framework.animation.easing.EaseType;
 import framework.rendering.Text;
 
 public class Widget {
@@ -18,6 +20,11 @@ public class Widget {
 	public Vec2F origin = new Vec2F(0, 0);
 	public WidgetType type;
 	public Widget up = null, down = null, left = null, right = null, last = null;
+	public Animated clickAnim = new Animated(false, false)
+		.frame(0, 1, EaseType.None)
+		.frame(250, 0.75f, EaseType.None)
+		.frame(500, 1.0f, EaseType.None)
+		.speed(0.5f);
 //	private boolean clicked = false;
 
 	/*
@@ -51,6 +58,7 @@ public class Widget {
 				/*clicked = true;*/
 				Window.audio.playSfx("menu_action");
 				clicked();
+				clickAnim.reset();
 			}
 		}
 	}
@@ -61,6 +69,8 @@ public class Widget {
 			
 		case Text:
 			Text.draw(Window.dl, rect.pos.x, rect.pos.y, 1, 0, 0, Color.red, Color.white, text);
+			float s = clickAnim.get();
+			Window.dl.transformCenter(0, 0, 0, 0, s, s, 0, 1);
 			break;
 		default:
 			break;		

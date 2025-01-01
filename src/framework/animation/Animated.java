@@ -13,6 +13,11 @@ public class Animated extends Timer /*implements Runnable*/ {
 	//private boolean reversing, pingPong, repeat, valid = true;
 	private Keyframe skf = new Keyframe(0, 0, EaseType.None);
 	
+	public Animated speed(float spd) {
+		speedM = spd;
+		return this;
+	}
+	
 	public Animated(boolean pingPong, boolean repeat) {		
 		this.pingPong = pingPong;
 		/*if(pingPong) repeat = true;*/

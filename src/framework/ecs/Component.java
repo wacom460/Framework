@@ -14,15 +14,19 @@ public class Component<T> {
 		this.ct = ct;
 	}
 	
-	public void remove(int id) {
+	public synchronized void remove(int id) {
 		dict.remove(id);
 	}
 	
-	public T get(int id) {
+	public synchronized T get(int id) {
 		return get(id, true);
 	}
 	
-	public T get(int id, boolean makeNew) {
+	public synchronized boolean has(int id) {
+		return dict.containsKey(id);
+	}
+	
+	public synchronized T get(int id, boolean makeNew) {
 		if(id == 0) {
 			try {
 				throw new Exception("id 0 not allowed.");
@@ -43,7 +47,7 @@ public class Component<T> {
 		return ret;
 	}
 	
-	public T set(int id, T obj) {
+	public synchronized T set(int id, T obj) {
 		return dict.put(id, obj);
 	}
 }

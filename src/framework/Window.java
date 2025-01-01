@@ -1,14 +1,10 @@
 package framework;
 
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -132,10 +128,10 @@ public abstract class Window {
 			Display.setDisplayMode(new DisplayMode(width, height));
 			Display.create(new PixelFormat(), new ContextAttribs(2, 1).withForwardCompatible(false));
 
-			IntBuffer cursorSize = BufferUtils.createIntBuffer(1);
-            IntBuffer cursorData = BufferUtils.createIntBuffer(1);
-            Cursor invisibleCursor = new Cursor(1, 1, 0, 0, 1, cursorData, cursorSize);
-            Mouse.setNativeCursor(invisibleCursor);
+//			IntBuffer cursorSize = BufferUtils.createIntBuffer(1);
+//            IntBuffer cursorData = BufferUtils.createIntBuffer(1);
+//            Cursor invisibleCursor = new Cursor(1, 1, 0, 0, 1, cursorData, cursorSize);
+//            Mouse.setNativeCursor(invisibleCursor);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 			System.exit(-1);

@@ -3,7 +3,7 @@ package framework;
 
 public class Timer {
 	private Clock clock = new Clock();
-	public float ms, minMs, maxMs = Float.MAX_VALUE, maxUpdateDelta = 20;
+	public float speedM = 1.0f, ms, minMs, maxMs = Float.MAX_VALUE, maxUpdateDelta = 20;
 	public boolean reversed, pingPong, repeat;
 	private long lastUpdateFrame = -1;
 	
@@ -29,7 +29,7 @@ public class Timer {
 	
 	public void update() {
 		final float bef = MathStuff.clamp(ms, minMs, maxMs);
-		float eMs = MathStuff.clamp(clock.elapsedMs(), 0, maxUpdateDelta),
+		float eMs = MathStuff.clamp(clock.elapsedMs() * speedM, 0, maxUpdateDelta),
 			oMs = bef;
 		oMs += reversed ? -eMs : eMs;
 		if(((oMs > maxMs && !reversed) || (oMs < minMs && reversed))) {
